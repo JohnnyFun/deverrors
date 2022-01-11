@@ -1,3 +1,4 @@
+// NOTE: DO NOT MODIFY THIS CODE DIRECTLY FROM AZURE. INSTEAD MODIFY THE REPO AND THEN COPY THE CODE TO AZURE
 const nodeFetch = (...args) => import('node-fetch').then(f => f.default(...args)) // since nodejs doesn't support esm import natively
 const zlib = require('zlib')
 
