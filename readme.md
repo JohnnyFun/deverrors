@@ -1,6 +1,6 @@
 **To make changes and deploy:**
-  - make PR for this repo, or just change the code directly
-  - then copy the code into azure [here](https://portal.azure.com/#blade/WebsitesExtension/FunctionMenuBlade/code/resourceId/%2Fsubscriptions%2F0d1b6026-7597-4672-a5fd-f1bd1553bdc2%2FresourceGroups%2FSlackAlerter%2Fproviders%2FMicrosoft.Web%2Fsites%2Fslack-deverrors%2Ffunctions%2FTimerTrigger1)
+  - make PR for this repo, or just change the code directly if you have privileges
+  - then copy the code in [appinsights-slack-alerter-http-endpoint.js](https://github.com/JohnnyFun/deverrors/blob/main/appinsights-slack-alerter-http-endpoint.js) into azure [here](https://portal.azure.com/#blade/WebsitesExtension/FunctionMenuBlade/code/resourceId/%2Fsubscriptions%2F0d1b6026-7597-4672-a5fd-f1bd1553bdc2%2FresourceGroups%2FSlackAlerter%2Fproviders%2FMicrosoft.Web%2Fsites%2Fslack-deverrors%2Ffunctions%2FTimerTrigger1)
 
 We could hook it up to deploy from vscode, but meh--just want to have the history/repo in a central location and we can manually copy the code up into azure. So just don't forget to change this repo if you make changes, otherwise they may get overwritten the next time someone changes it.
 
