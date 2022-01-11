@@ -3,7 +3,7 @@ const nodeFetch = (...args) => import('node-fetch').then(f => f.default(...args)
 const zlib = require('zlib')
 
 const limitErrorCount = 10
-const slackAccessToken = 'xoxb-38708749556-1147794268754-lsAVJT8W38Qs30ZR4wjx43Zg'
+const slackAccessToken = process.env.SLACK_ACCESS_TOKEN
 const slackChannel = 'deverrors'
 const prodEnvName = 'Prod/stage'
 const azureAppInsightsEnvironmentsToCheck = [
