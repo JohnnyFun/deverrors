@@ -1,4 +1,4 @@
-To deploy: 
+**To make changes and deploy:**
   - make PR for this repo, or just change the code directly
   - then copy the code into azure [here](https://portal.azure.com/#blade/WebsitesExtension/FunctionMenuBlade/code/resourceId/%2Fsubscriptions%2F0d1b6026-7597-4672-a5fd-f1bd1553bdc2%2FresourceGroups%2FSlackAlerter%2Fproviders%2FMicrosoft.Web%2Fsites%2Fslack-deverrors%2Ffunctions%2FTimerTrigger1)
 
