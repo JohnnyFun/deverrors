@@ -80,7 +80,7 @@ async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStart
       await waitAsync(waitBetweenAttempts)
     }
   }
-  await postToSlack(`${env.name}: Expected ${expectedErrorCount} errors, but only found ${errors.length}`)
+  await postToSlack(`${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}`)
   return errors
 }
 
