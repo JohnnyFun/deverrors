@@ -51,9 +51,8 @@ module.exports = async function (context, req) {
 async function alertDevErrorsIfNecessary(expectedErrorCount, env, windowStartTime) {
   try {
     log(`${env.name}: Looking for errors since ${windowStartTime}`)
-    const errors = await getAppInsightsErrorsSince(env, windowStartTime)
+    const errors = tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStartTime)
     log(`${env.name}: Found ${errors.length} errors`)
-    if (expectedErrorCount > errors.length) await postToSlack(`${env.name}: Expected ${expectedErrorCount} errors, but only found ${errors.length}`)
     if (errors.length === 0) return
     const filteredErrors = filterAppInsightsWeCareAbout(errors)
     log(`${env.name}: Found ${filteredErrors.length} errors we care about`)
@@ -64,6 +63,25 @@ async function alertDevErrorsIfNecessary(expectedErrorCount, env, windowStartTim
     log(e)
     await postToSlack(`Error checking for errors: ${e.message}`)
   }
+}
+
+async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStartTime) {
+  // sometimes the first call to getAppInsightsErrorsSince doesn't return all the expected errors, so we'll try a few times before just going with what we get
+  const attempts = 5
+  const waitBetweenAttempts = 1000
+  let attempt = 0
+  let errors = []
+  while (attempt < attempts) {
+    errors = await getAppInsightsErrorsSince(env, windowStartTime)
+    if (expectedErrorCount <= r.length) {
+      return errors
+    } else {
+      attempt++
+      await waitAsync(waitBetweenAttempts)
+    }
+  }
+  await postToSlack(`${env.name}: Expected ${expectedErrorCount} errors, but only found ${errors.length}`)
+  return errors
 }
 
 function filterAppInsightsWeCareAbout(errors) {
@@ -78,6 +96,29 @@ function filterAppInsightsWeCareAbout(errors) {
     )
       return false
 
+    /* this comes from map-box
+        unminified goes to a minified file...could unminify it and dig deeper, but meh
+        {
+          "source": "webpack:///node_modules/mapbox-gl/dist/mapbox-gl.js",
+          "line": 31,
+          "column": 391568,
+          "name": null
+        }
+    */
+    if (error.type === 'TypeError: undefined is not an object (evaluating \'t[12]\')') return false
+
+    // https://blog.sentry.io/2016/05/17/what-is-script-error
+    // errors that came from a different origin (intercom, recaptcha, etc) and don't have crossorigin attribute and Access-Control-Allow-Origin set
+    // ideally, we'd wrap in try/catch like the article says, so we can see what the underlying error is, but don't care right now and don't want these to be annoying
+    if (error.type === 'Script error.') return false
+
+    // comes from tribute.js when you click on the scrollbar of the dropdown
+    // does not affect end user experience
+    // documented here: https://github.com/zurb/tribute/issues/215
+    // couldn't find the error message in the src code, but also doesn't seem like it's a common error, so we'll just ignore it
+    // could also pull fork it and fix it, but meh
+    if (error.type === 'Uncaught Error: cannot find the <li> container for the click at value') return false
+    
     // add more here if you want to filter out more errors...
 
     return true
@@ -118,6 +159,10 @@ function getSlackMessageFromErrors(env, filteredErrors) {
   const messageTitle = buildAppInsightsQueryLink(env, messageTitleText, 'exceptions | order by timestamp desc | limit 50')
   const message = `*${messageTitle}*\n\n${messages.join('\n\n')}`
   return message
+}
+
+function waitAsync(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function getAppInsightsErrorsSince(env, windowStartTime) {
