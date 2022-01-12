@@ -51,7 +51,7 @@ module.exports = async function (context, req) {
 async function alertDevErrorsIfNecessary(expectedErrorCount, env, windowStartTime) {
   try {
     log(`${env.name}: Looking for errors since ${windowStartTime}`)
-    const errors = tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStartTime)
+    const errors = await tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStartTime)
     log(`${env.name}: Found ${errors.length} errors`)
     if (errors.length === 0) return
     const filteredErrors = filterAppInsightsWeCareAbout(errors)
@@ -73,7 +73,7 @@ async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStart
   let errors = []
   while (attempt < attempts) {
     errors = await getAppInsightsErrorsSince(env, windowStartTime)
-    if (expectedErrorCount <= r.length) {
+    if (expectedErrorCount <= errors.length) {
       return errors
     } else {
       attempt++
@@ -110,7 +110,7 @@ function filterAppInsightsWeCareAbout(errors) {
     // https://blog.sentry.io/2016/05/17/what-is-script-error
     // errors that came from a different origin (intercom, recaptcha, etc) and don't have crossorigin attribute and Access-Control-Allow-Origin set
     // ideally, we'd wrap in try/catch like the article says, so we can see what the underlying error is, but don't care right now and don't want these to be annoying
-    if (error.type === 'Script error.') return false
+    if (error.type === 'ErrorEvent: Script error.') return false
 
     // comes from tribute.js when you click on the scrollbar of the dropdown
     // does not affect end user experience
