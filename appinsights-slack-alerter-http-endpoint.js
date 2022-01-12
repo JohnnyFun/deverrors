@@ -68,7 +68,7 @@ async function alertDevErrorsIfNecessary(expectedErrorCount, env, windowStartTim
 async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStartTime) {
   // sometimes the first call to getAppInsightsErrorsSince doesn't return all the expected errors, so we'll try a few times before just going with what we get
   const attempts = 5
-  const waitBetweenAttempts = 1000
+  const waitBetweenAttempts = 5000
   let attempt = 0
   let errors = []
   while (attempt < attempts) {
