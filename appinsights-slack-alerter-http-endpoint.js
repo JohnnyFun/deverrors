@@ -80,7 +80,7 @@ async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStart
       await waitAsync(waitBetweenAttempts)
     }
   }
-  await postToSlack(`${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}`)
+  await postToSlack(`${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}. ${buildAppInsightsQueryLink(env, 'Check recent errors manually', buildAppInsightsQuery())}.`)
   return errors
 }
 
@@ -173,12 +173,7 @@ async function getAppInsightsErrorsSince(env, windowStartTime) {
       'x-api-key': env.azureAppInsightsApiKey,
     },
     {
-      query: `
-        exceptions
-        | where timestamp >= todatetime('${windowStartTime}')
-        | order by timestamp desc
-        | limit ${limitErrorCount + 1}
-      `,
+      query: buildAppInsightsQuery(windowStartTime),
       options: {
         truncationMaxSize: 67108864,
       },
@@ -196,6 +191,15 @@ async function getAppInsightsErrorsSince(env, windowStartTime) {
     }, {})
   })
   return errors
+}
+
+function buildAppInsightsQuery(windowStartTime) {
+  return `
+        exceptions
+        | where timestamp >= todatetime('${windowStartTime}')
+        | order by timestamp desc
+        | limit ${limitErrorCount + 1}
+      `
 }
 
 function buildAppInsightsQueryLink(env, text, query) {
