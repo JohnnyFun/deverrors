@@ -145,7 +145,8 @@ function getSlackMessageFromErrors(env, filteredErrors) {
       errorDetails.push(`user: ${user}${isCX ? ' (impersonating)' : ''}`)
     }
     if (error.operation_Name && error.operation_Name !== '/') {
-      errorDetails.push(`operation_Name: ${error.operation_Name.startsWith('/') ? env.url : ''}${error.operation_Name}`)
+      const url = `${error.operation_Name.startsWith('/') ? env.url : ''}${error.operation_Name}`
+      errorDetails.push(`operation_Name: <${url}|${error.operation_Name}>`)
     }
     if (!error.assembly.includes('app.cliniciannexus.com')) errorDetails.push(`assembly: ${error.assembly}`)
     const errorQuery = `exceptions | where timestamp == todatetime('${error.timestamp}')`
