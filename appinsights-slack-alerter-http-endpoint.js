@@ -94,8 +94,9 @@ function filterAppInsightsWeCareAbout(errors) {
     if (assemblyIsUnknown && error.type?.includes('[object String]"Timeout')) return false
       
     
-    // chrome extension errors should usually not affect our app's code. And we can't really do anything til a particular person actually complains about something not working and then we can look up errors from them to find these and suggest they disable chrome extensions to see if it resolves the issue
+    // browser extension errors should usually not affect our app's code. And we can't really do anything til a particular person actually complains about something not working and then we can look up errors from them to find these and suggest they disable chrome extensions to see if it resolves the issue
     if (error.assembly?.startsWith('chrome-extension:')) return false
+    if (error.assembly?.startsWith('@safari-extension:')) return false
 
     // recaptcha throws this error, but it doesn't seem to be a problem
     if (
