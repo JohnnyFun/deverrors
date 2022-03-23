@@ -1,4 +1,3 @@
-// NOTE: DO NOT MODIFY THIS CODE DIRECTLY FROM AZURE. INSTEAD MODIFY THE REPO AND THEN COPY THE CODE TO AZURE
 const nodeFetch = (...args) => import('node-fetch').then(f => f.default(...args)) // since nodejs doesn't support esm import natively
 const zlib = require('zlib')
 
@@ -80,7 +79,13 @@ async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStart
       await waitAsync(waitBetweenAttempts)
     }
   }
-  await postToSlack(`${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}. ${buildAppInsightsQueryLink(env, 'Check recent errors manually', buildAppInsightsQuery(windowStartTime))}.`)
+  await postToSlack(
+    `${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}. ${buildAppInsightsQueryLink(
+      env,
+      'Check recent errors manually',
+      buildAppInsightsQuery(windowStartTime)
+    )}.`
+  )
   return errors
 }
 
@@ -92,8 +97,7 @@ function filterAppInsightsWeCareAbout(errors) {
     const assemblyIsUnknown = error.assembly === 'Unknown'
     if (assemblyIsUnknown && error.type?.includes('TypeError: Load failed')) return false
     if (assemblyIsUnknown && error.type?.includes('[object String]"Timeout')) return false
-      
-    
+
     // browser extension errors should usually not affect our app's code. And we can't really do anything til a particular person actually complains about something not working and then we can look up errors from them to find these and suggest they disable chrome extensions to see if it resolves the issue
     if (error.assembly?.startsWith('chrome-extension:')) return false
     if (error.assembly?.startsWith('@safari-extension:')) return false
@@ -114,7 +118,7 @@ function filterAppInsightsWeCareAbout(errors) {
           "name": null
         }
     */
-    if (error.type === 'TypeError: undefined is not an object (evaluating \'t[12]\')') return false
+    if (error.type === "TypeError: undefined is not an object (evaluating 't[12]')") return false
 
     // https://blog.sentry.io/2016/05/17/what-is-script-error
     // errors that came from a different origin (intercom, recaptcha, etc) and don't have crossorigin attribute and Access-Control-Allow-Origin set
@@ -127,7 +131,12 @@ function filterAppInsightsWeCareAbout(errors) {
     // couldn't find the error message in the src code, but also doesn't seem like it's a common error, so we'll just ignore it
     // could also pull fork it and fix it, but meh
     if (error.type === 'Uncaught Error: cannot find the <li> container for the click at value') return false
-    
+
+    // customDimensions
+    const customDimensions = error.customDimensions ? JSON.parse(error.customDimensions) : {}
+    if (customDimensions.url?.startsWith('@safari-extension:') || customDimensions.errorSrc.startsWith('window.onerror@safari-extension:'))
+      return false
+
     // add more here if you want to filter out more errors...
 
     return true
