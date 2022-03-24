@@ -134,7 +134,7 @@ function filterAppInsightsWeCareAbout(errors) {
 
     // customDimensions
     const customDimensions = error.customDimensions ? JSON.parse(error.customDimensions) : {}
-    if (customDimensions.url?.startsWith('@safari-extension:') || customDimensions.errorSrc.startsWith('window.onerror@safari-extension:'))
+    if (customDimensions.url?.startsWith('@safari-extension:') || customDimensions.errorSrc?.startsWith('window.onerror@safari-extension:'))
       return false
 
     // add more here if you want to filter out more errors...
