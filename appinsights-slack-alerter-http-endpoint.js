@@ -100,7 +100,8 @@ function filterAppInsightsWeCareAbout(errors) {
 
     // browser extension errors should usually not affect our app's code. And we can't really do anything til a particular person actually complains about something not working and then we can look up errors from them to find these and suggest they disable chrome extensions to see if it resolves the issue
     const safariExtension = '@safari-extension:'
-    if (error.assembly?.startsWith('chrome-extension:')) return false
+    const chromeExtension = 'chrome-extension:'
+    if (error.assembly?.startsWith(chromeExtension)) return false
     if (error.assembly?.startsWith(safariExtension)) return false
 
     // recaptcha throws this error, but it doesn't seem to be a problem
@@ -136,6 +137,8 @@ function filterAppInsightsWeCareAbout(errors) {
     // customDimensions
     const customDimensions = error.customDimensions ? JSON.parse(error.customDimensions) : {}
     if (customDimensions.CN_Stack?.includes(safariExtension) || customDimensions.url?.includes(safariExtension) || customDimensions.errorSrc?.includes(safariExtension))
+      return false
+    if (customDimensions.CN_Stack?.includes(chromeExtension) || customDimensions.url?.includes(chromeExtension) || customDimensions.errorSrc?.includes(chromeExtension))
       return false
 
     // add more here if you want to filter out more errors...
