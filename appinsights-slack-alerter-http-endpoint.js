@@ -2,7 +2,7 @@ const nodeFetch = (...args) => import('node-fetch').then(f => f.default(...args)
 const zlib = require('zlib')
 
 const limitErrorCount = 10
-const slackChannel = 'deverrors'
+const slackChannel = 'dev-errors'
 const prodEnvName = 'Prod/stage'
 let _context
 
