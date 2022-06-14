@@ -191,7 +191,7 @@ function waitAsync(ms) {
 async function getAppInsightsErrorsSince(env, windowStartTime) {
   // docs: https://dev.applicationinsights.io/documentation/Using-the-API/Query
   const rawData = await httpPost(
-    `https://api.applicationinsights.io/v1/apps/${env.azureAppInsightsApplicationId}/query?timespan=P1D`,
+    `https://api.applicationinsights.io/v1/apps/${env.azureAppInsightsApplicationId}/query`,
     {
       'x-api-key': env.azureAppInsightsApiKey,
     },
