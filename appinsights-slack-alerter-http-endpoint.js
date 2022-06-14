@@ -191,7 +191,7 @@ function waitAsync(ms) {
 async function getAppInsightsErrorsSince(env, windowStartTime) {
   // docs: https://dev.applicationinsights.io/documentation/Using-the-API/Query
   const rawData = await httpPost(
-    `https://api.applicationinsights.io/v1/apps/${env.azureAppInsightsApplicationId}/query`,
+    `https://api.applicationinsights.io/v1/apps/${env.azureAppInsightsApplicationId}/query?timespan=P1D`,
     {
       'x-api-key': env.azureAppInsightsApiKey,
     },
@@ -233,7 +233,7 @@ function buildAppInsightsQueryLink(env, text, query) {
   const isProd = envName === prodEnvName
   const appName = isProd ? 'ClinicianNexus' : 'cliniciannexusdemo'
   const appInsightsName = isProd ? 'CNProdInsights' : 'CNDemoInsights'
-  return `<https://portal.azure.com/#blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/resourceId/%2Fsubscriptions%2F0d1b6026-7597-4672-a5fd-f1bd1553bdc2%2FresourceGroups%2F${appName}%2Fproviders%2Fmicrosoft.insights%2Fcomponents%2F${appInsightsName}/source/LogsBlade.AnalyticsShareLinkToQuery/q/${encoded}/timespan/P1D|${text}>`
+  return `<https://portal.azure.com/#blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/resourceId/%2Fsubscriptions%2F0d1b6026-7597-4672-a5fd-f1bd1553bdc2%2FresourceGroups%2F${appName}%2Fproviders%2Fmicrosoft.insights%2Fcomponents%2F${appInsightsName}/source/LogsBlade.AnalyticsShareLinkToQuery/q/${encoded}|${text}>`
 }
 
 function postToSlack(message) {
