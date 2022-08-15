@@ -1,4 +1,4 @@
-const nodeFetch = (...args) => import('node-fetch').then(f => f.default(...args)) // since nodejs doesn't support esm import natively
+const nodeFetch = (...args) => import('node-fetch').then(f => f.default(...args)) // since nodejs doesn't support esm import natively (TODO update: just rename this file to be '.mjs' and import syntax will work)
 const zlib = require('zlib')
 
 const limitErrorCount = 10
