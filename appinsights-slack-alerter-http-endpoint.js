@@ -140,6 +140,10 @@ function filterAppInsightsWeCareAbout(errors) {
       return false
     if (customDimensions.CN_Stack?.includes(chromeExtension) || customDimensions.url?.includes(chromeExtension) || customDimensions.errorSrc?.includes(chromeExtension))
       return false
+    
+    // op cancelled. app code will also filters these out, but haven't deployed yet
+    if (error.problemId?.includes('System.Runtime.InteropServices.COMException') && error.outerMessage?.includes('The client has disconnected')) return false
+    if (error.problemId?.includes('System.InvalidOperationException') && error.outerMessage?.includes('Operation cancelled by user.')) return false
 
     // add more here if you want to filter out more errors...
 
