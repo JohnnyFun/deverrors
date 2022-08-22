@@ -108,7 +108,11 @@ function filterAppInsightsWeCareAbout(errors) {
     // recaptcha throws this error, but it doesn't seem to be a problem
     if (
       error.assembly?.startsWith('https://www.gstatic.com/recaptcha') &&
-      (error.type?.includes(`Cannot read properties of null (reading 'style')`) || error.type?.includes(`Cannot read property 'style' of null`))
+      (
+        error.type?.includes(`Cannot read properties of null (reading 'style')`) || 
+        error.type?.includes(`Cannot read property 'style' of null`) ||
+        error.type?.includes('TypeError: z is null at V')
+      )
     )
       return false
 
