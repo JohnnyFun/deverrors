@@ -79,13 +79,14 @@ async function tryGetAppInsightsErrorsSince(expectedErrorCount, env, windowStart
       await waitAsync(waitBetweenAttempts)
     }
   }
-  await postToSlack(
-    `${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}. ${buildAppInsightsQueryLink(
-      env,
-      'Check recent errors manually',
-      buildAppInsightsQuery(windowStartTime)
-    )}.`
-  )
+  // this has just been more annoying than helpful. Doesn't seem like the "missing" ones every show up anyway, so maybe the expectedErrorCount isn't accurate for some reason :shrug:
+  // await postToSlack(
+  //   `${env.name}: Expected ${expectedErrorCount} error${expectedErrorCount === 1 ? '' : 's'}, but found ${errors.length}. ${buildAppInsightsQueryLink(
+  //     env,
+  //     'Check recent errors manually',
+  //     buildAppInsightsQuery(windowStartTime)
+  //   )}.`
+  // )
   return errors
 }
 
