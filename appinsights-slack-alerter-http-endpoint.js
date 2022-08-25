@@ -111,7 +111,7 @@ function filterAppInsightsWeCareAbout(errors) {
       (
         error.type?.includes(`Cannot read properties of null (reading 'style')`) || 
         error.type?.includes(`Cannot read property 'style' of null`) ||
-        error.type?.includes('TypeError: z is null at V')
+        error.problemId?.includes('TypeError: z is null at V')
       )
     )
       return false
