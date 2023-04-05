@@ -131,6 +131,7 @@ function filterAppInsightsWeCareAbout(errors) {
     // errors that came from a different origin (intercom, recaptcha, etc) and don't have crossorigin attribute and Access-Control-Allow-Origin set
     // ideally, we'd wrap in try/catch like the article says, so we can see what the underlying error is, but don't care right now and don't want these to be annoying
     if (error.type === 'ErrorEvent: Script error.') return false
+    if (error.type === 'CustomEvent: {"isTrusted":false}') return false
 
     // comes from tribute.js when you click on the scrollbar of the dropdown
     // does not affect end user experience
