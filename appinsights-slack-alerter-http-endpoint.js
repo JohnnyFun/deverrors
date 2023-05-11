@@ -150,6 +150,20 @@ function filterAppInsightsWeCareAbout(errors) {
     // op cancelled. app code will also filters these out, but haven't deployed yet
     if (error.problemId?.includes('System.Runtime.InteropServices.COMException') && error.outerMessage?.includes('The client has disconnected')) return false
     if (error.problemId?.includes('System.InvalidOperationException') && error.outerMessage?.includes('Operation cancelled by user.')) return false
+    
+    // mapbox fails periodically: I'm not sure why this happens, but I haven't heard any complaints about mapbox not loading.
+    // And it at least appears that mapbox community is aware of it, even though the issue was closed due to not enough info. https://github.com/mapbox/mapbox-gl-js/issues/9335. 
+    // Sounds like it could be that the user has an old graphics card :shrug:. They'd at least see the list of opportunities, without the map, so maybe they're just dealing with it...
+    // Ignoring since it's kinda just noise at this point since not sure what's up and have no complaints about it :shrug:
+    /*
+    {
+      "source": "webpack:///node_modules/mapbox-gl/dist/mapbox-gl.js",
+      "line": 36,
+      "column": 452617,
+      "name": null
+    }
+    */
+    if (error.type?.includes('Failed to initialize WebGL')) return false
 
     // add more here if you want to filter out more errors...
 
