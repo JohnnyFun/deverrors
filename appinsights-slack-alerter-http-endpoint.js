@@ -102,8 +102,10 @@ function filterAppInsightsWeCareAbout(errors) {
     // browser extension errors should usually not affect our app's code. And we can't really do anything til a particular person actually complains about something not working and then we can look up errors from them to find these and suggest they disable chrome extensions to see if it resolves the issue
     const safariExtension = '@safari-extension:'
     const chromeExtension = 'chrome-extension:'
+    const webKitExtension = 'webkit-masked-url:'
     if (error.assembly?.startsWith(chromeExtension)) return false
     if (error.assembly?.startsWith(safariExtension)) return false
+    if (error.assembly?.startsWith(webKitExtension)) return false
 
     // recaptcha throws this error, but it doesn't seem to be a problem
     if (
