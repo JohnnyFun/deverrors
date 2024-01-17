@@ -98,6 +98,7 @@ function filterAppInsightsWeCareAbout(errors) {
     const assemblyIsUnknown = error.assembly === 'Unknown'
     if (assemblyIsUnknown && error.type?.includes('TypeError: Load failed')) return false
     if (assemblyIsUnknown && error.type?.includes('[object String]"Timeout')) return false
+    if (assemblyIsUnknown && error.type?.includes('AbortError')) return false
 
     // browser extension errors should usually not affect our app's code. And we can't really do anything til a particular person actually complains about something not working and then we can look up errors from them to find these and suggest they disable chrome extensions to see if it resolves the issue
     const safariExtension = '@safari-extension:'
